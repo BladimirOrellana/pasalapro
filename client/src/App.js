@@ -18,6 +18,7 @@ register();
 
 const App = () => {
   useEffect(() => {
+    console.log("key ", process.env.REACT_APP_FIREBASE_PUSH_KEY);
     const messaging = getMessaging();
 
     Notification.requestPermission().then((permission) => {

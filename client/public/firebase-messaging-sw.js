@@ -1,9 +1,10 @@
 // firebase-messaging-sw.js
-
-importScripts("https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js");
-importScripts("https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging.js");
-
-// Firebase config (same config as your React app)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import {
+  getMessaging,
+  onBackgroundMessage,
+} from "https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging.js";
+console.log("from publick ", process.env.REACT_APP_FIREBASE_API_KEY);
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -15,13 +16,13 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
 // Initialize messaging
-const messaging = firebase.messaging();
+const messaging = getMessaging(app);
 
 // Background message handler
-messaging.onBackgroundMessage(function (payload) {
+onBackgroundMessage(messaging, function (payload) {
   console.log("Received background message ", payload);
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
