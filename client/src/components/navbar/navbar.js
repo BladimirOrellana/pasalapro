@@ -19,7 +19,6 @@ const NavBar = () => {
       position="sticky"
       sx={{ backgroundColor: "white", boxShadow: 0, color: "black" }}
     >
-      <InstallBanner />
       <Toolbar sx={{ justifyContent: "space-between", padding: "0 20px" }}>
         {/* Logo */}
         <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }}>

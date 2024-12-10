@@ -9,10 +9,12 @@ import HomePage from "./components/views/public/home";
 import NavBar from "./components/navbar/navbar";
 import ProfilePage from "./components/views/private/profile";
 import NotFoundPage from "./components/views/public/nofound";
+import InstallBanner from "./components/InstallBanner/installBanner";
 
 const App = () => {
   return (
     <Router>
+      <InstallBanner />
       <NavBar />
 
       <Routes>
