@@ -10,6 +10,7 @@ import {
 import { Menu } from "@mui/icons-material";
 import { Link } from "react-router-dom"; // For routing
 import { AuthContext } from "../firebase/AuthContext";
+import InstallBanner from "../InstallBanner/installBanner";
 
 const NavBar = () => {
   const { user } = useContext(AuthContext);
@@ -18,6 +19,7 @@ const NavBar = () => {
       position="sticky"
       sx={{ backgroundColor: "white", boxShadow: 0, color: "black" }}
     >
+      <InstallBanner />
       <Toolbar sx={{ justifyContent: "space-between", padding: "0 20px" }}>
         {/* Logo */}
         <Typography variant="h6" sx={{ fontWeight: "bold", color: "black" }}>

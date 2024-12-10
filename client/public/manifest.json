@@ -1,6 +1,7 @@
 {
-  "short_name": "pasalapro",
   "name": "PasalaPro",
+  "short_name": "PasalaPro",
+  "description": "Empowering Soccer Players",
   "icons": [
     {
       "src": "favicon.ico",
