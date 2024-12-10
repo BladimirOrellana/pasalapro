@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Container,
@@ -7,15 +7,23 @@ import {
   Grid,
   Avatar,
   Paper,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
 } from "@mui/material";
 import { Edit } from "@mui/icons-material";
 import { AuthContext } from "../../firebase/AuthContext"; // Import AuthContext
 import { useNavigate } from "react-router-dom";
-import PlayerCard from "../public/PlayerCard";
+import PlayerCard from "../public/PlayerCard"; // Assuming PlayerCard is a custom component
 
 const ProfilePage = () => {
-  const { user, logout } = useContext(AuthContext); // Access user and logout function from context
+  const { user, logout, getToken } = useContext(AuthContext); // Access user and logout function from context
   const navigate = useNavigate();
+
+  // Local state for role update
+  const [role, setRole] = useState(user?.role || "Fan"); // Default to 'Fan' if no role is set
+  const [error, setError] = useState(null);
 
   // Redirect to login if user is not authenticated
   useEffect(() => {
@@ -33,17 +41,39 @@ const ProfilePage = () => {
     }
   };
 
+  const handleRoleChange = async (event) => {
+    const selectedRole = event.target.value;
+    setRole(selectedRole);
+
+    try {
+      // Update user role in your backend or Firebase
+      // Assuming you have a backend API to update the role
+      const token = await getToken();
+      await fetch("/api/users/updaterole", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          email: user.email,
+          role: selectedRole,
+        }),
+      });
+      // Optionally update the user in localStorage
+      localStorage.setItem(
+        "currentUser",
+        JSON.stringify({ ...user, role: selectedRole })
+      );
+    } catch (err) {
+      console.error("Error updating role", err);
+      setError("Failed to update role");
+    }
+  };
+
   if (!user) {
     return null; // Optionally return null while redirecting, to avoid rendering the profile page
   }
-  const playerData = {
-    name: "Cristiano Ronaldo",
-    team: "Manchester United",
-    role: "Forward",
-    jerseyNumber: "7",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Cristiano_Ronaldo_2018.jpg/800px-Cristiano_Ronaldo_2018.jpg", // Replace with actual image URL
-  };
 
   return (
     <Container sx={{ mt: 5, maxWidth: "lg" }}>
@@ -76,12 +106,30 @@ const ProfilePage = () => {
             <Typography variant="body1" color="textSecondary" sx={{ mb: 2 }}>
               {user.email}
             </Typography>
-            <Typography variant="body1" color="textSecondary" sx={{ mb: 2 }}>
-              Role: {user.role || "Fan"}
-            </Typography>
-            <Typography variant="body1" color="textSecondary" sx={{ mb: 2 }}>
-              id: {user._id || "Fan"}
-            </Typography>
+
+            {/* Role Selection */}
+            <FormControl fullWidth sx={{ mb: 2 }}>
+              <InputLabel id="role-label">Role</InputLabel>
+              <Select
+                labelId="role-label"
+                id="role-select"
+                value={role}
+                onChange={handleRoleChange}
+                label="Role"
+              >
+                <MenuItem value="Player">Player</MenuItem>
+                <MenuItem value="Sponsor">Sponsor</MenuItem>
+                <MenuItem value="League">League</MenuItem>
+                <MenuItem value="Fan">Fan</MenuItem>
+              </Select>
+            </FormControl>
+
+            {error && (
+              <Typography variant="body2" color="error" sx={{ mb: 2 }}>
+                {error}
+              </Typography>
+            )}
+
             {/* Edit Profile Button */}
             <Button
               fullWidth

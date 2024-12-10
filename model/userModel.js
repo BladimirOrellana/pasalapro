@@ -17,8 +17,8 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["player", "fan", "sponsor"], // Role can be one of these
-      default: "fan", // Default role
+      enum: ["Player", "Fan", "Sponsor"], // Role can be one of these
+      default: "Fan", // Default role
     },
     // You can add more fields specific to each role if necessary
     profilePicture: {
