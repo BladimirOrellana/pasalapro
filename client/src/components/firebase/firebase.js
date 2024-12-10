@@ -1,7 +1,11 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
-import { getMessaging } from "firebase/messaging";
+import {
+  getMessaging,
+  getToken as getFCMToken,
+  onMessage,
+} from "firebase/messaging"; // Renaming getToken to getFCMToken to avoid conflicts
 
 // Firebase config
 const firebaseConfig = {
@@ -22,4 +26,30 @@ const auth = getAuth(app);
 const analytics = getAnalytics(app);
 const messaging = getMessaging(app); // Firebase messaging instance
 
+// Refactored async function to get the FCM token
+export const getToken = async (setTokenFound) => {
+  try {
+    const currentToken = await getFCMToken(messaging, {
+      vapidKey: process.env.REACT_APP_FIREBASE_PUSH_KEY,
+    });
+
+    if (currentToken) {
+      console.log("Current token for client: ", currentToken);
+      setTokenFound(true);
+      // Track the token -> client mapping, by sending to backend server
+      // Show on the UI that permission is secured
+    } else {
+      console.log(
+        "No registration token available. Request permission to generate one."
+      );
+      setTokenFound(false);
+      // Show on the UI that permission is required
+    }
+  } catch (err) {
+    console.error("An error occurred while retrieving token: ", err);
+    // Handle error while retrieving token
+  }
+};
+
+// Exporting initialized services
 export { auth, analytics, messaging };

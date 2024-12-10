@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -12,8 +12,11 @@ import {
   CardMedia,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import { getToken } from "../../firebase/firebase";
 
 const HomePage = () => {
+  const [isTokenFound, setTokenFound] = useState(false);
+  getToken(setTokenFound);
   return (
     <>
       {/* Hero Section */}
@@ -29,6 +32,9 @@ const HomePage = () => {
         }}
       >
         <Container>
+          <Typography variant="h2" sx={{ fontWeight: "bold", mb: 2 }}>
+            {isTokenFound ? "Push Avilable" : "No push"}
+          </Typography>
           <Typography variant="h2" sx={{ fontWeight: "bold", mb: 2 }}>
             Empower Soccer Players with PasalaPro
           </Typography>
