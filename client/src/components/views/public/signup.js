@@ -35,7 +35,7 @@ const Signup = () => {
       const userData = {
         email: firebaseUser.email,
         password: password,
-        role: "fan", // Default role is 'fan'
+        role: "Fan", // Default role is 'fan'
       };
 
       // Send to backend to store in MongoDB
