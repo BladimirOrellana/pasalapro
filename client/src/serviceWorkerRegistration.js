@@ -1,4 +1,3 @@
-// src/serviceWorkerRegistration.js
 const isLocalhost = Boolean(
   window.location.hostname === "localhost" ||
     window.location.hostname === "[::1]" ||
@@ -15,7 +14,7 @@ export function register(config) {
     }
 
     window.addEventListener("load", () => {
-      const swUrl = `${process.env.PUBLIC_URL}/firebase-messaging-sw.js`; // Ensure this points to the correct service worker file
+      const swUrl = `${process.env.PUBLIC_URL}/firebase-messaging-sw.js`; // Correct path to service worker
 
       if (isLocalhost) {
         checkValidServiceWorker(swUrl, config);

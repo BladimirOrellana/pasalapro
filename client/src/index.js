@@ -6,9 +6,6 @@ import * as serviceWorkerRegistration from "./serviceWorkerRegistration"; // Imp
 
 import reportWebVitals from "./reportWebVitals";
 import { AuthProvider } from "./components/firebase/AuthContext";
-import { register } from "./serviceWorkerRegistration"; // Or wherever your service worker is located
-
-register(); // Registers the service worker to handle push notifications
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

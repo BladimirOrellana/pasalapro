@@ -12,20 +12,19 @@ import NotFoundPage from "./components/views/public/nofound";
 import InstallBanner from "./components/InstallBanner/installBanner";
 import { register } from "./serviceWorkerRegistration"; // Make sure path is correct
 import { getMessaging, getToken } from "firebase/messaging";
-import { messaging } from "./components/firebase/firebase"; // Import messaging instance from firebase.js
-import usePushNotification from "./components/firebase/usePushNotification"; // Adjust the import path
 
 // Register service worker to enable push notifications
 register();
 
 const App = () => {
-  usePushNotification();
   useEffect(() => {
     const messaging = getMessaging();
 
     Notification.requestPermission().then((permission) => {
       if (permission === "granted") {
-        getToken(messaging, { vapidKey: "YOUR_VAPID_PUBLIC_KEY" }) // Make sure to use your VAPID public key
+        getToken(messaging, {
+          vapidKey: process.env.REACT_APP_FIREBASE_PUSH_KEY,
+        }) // Make sure to use your VAPID public key
           .then((token) => {
             if (token) {
               console.log("FCM Token:", token);

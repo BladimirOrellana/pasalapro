@@ -1,10 +1,9 @@
-/* eslint-disable no-restricted-globals */
+// firebase-messaging-sw.js
 
-// Use importScripts to import Firebase SDKs for service workers
-importScripts("https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js");
-importScripts("https://www.gstatic.com/firebasejs/9.1.3/firebase-messaging.js");
+importScripts("https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js");
+importScripts("https://www.gstatic.com/firebasejs/9.6.1/firebase-messaging.js");
 
-// Firebase configuration (same config used in the app)
+// Firebase config (same config as your React app)
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -18,18 +17,18 @@ const firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
-// Initialize Firebase messaging
+// Initialize messaging
 const messaging = firebase.messaging();
 
 // Background message handler
-messaging.onBackgroundMessage((payload) => {
-  console.log("Received background message: ", payload);
+messaging.onBackgroundMessage(function (payload) {
+  console.log("Received background message ", payload);
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
     icon: payload.notification.icon,
   };
 
-  // Display the notification in the background
+  // Show notification
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
