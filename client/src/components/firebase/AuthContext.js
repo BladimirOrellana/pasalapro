@@ -25,9 +25,41 @@ export const AuthProvider = ({ children }) => {
         console.log("Cached user:", cachedUser);
 
         // Check if we have a cached user
-        if (cachedUser && cachedUser.email === currentUser.email) {
-          console.log("Using cached user:", cachedUser);
-          setUser(cachedUser);
+        if (currentUser.email) {
+          console.log("Fetching user from MongoDB:", currentUser.email);
+          // Make sure this API request is to your backend to fetch the user by email
+          const result = await axios.get(`/api/users/${currentUser.email}`);
+          if (result.data) {
+            const currentUserWithDB = {
+              email: result.data.email || "N/A", // Default fallback if email is not provided
+              role: result.data.role || "Fan", // Default fallback if role is not provided
+              _id: result.data._id || "Unknown", // Default fallback if _id is not available
+              firstName: result.data.firstName || "Unknown", // Fallback to "Unknown" if not provided
+              lastName: result.data.lastName || "Unknown", // Fallback to "Unknown" if not provided
+              city: result.data.city || "Unknown", // Fallback to "Unknown" if not provided
+              state: result.data.state || "Unknown", // Fallback to "Unknown" if not provided
+              country: result.data.country || "Unknown", // Fallback to "Unknown" if not provided
+              zipcode: result.data.zipcode || "Unknown", // Fallback to "Unknown" if not provided
+              position: result.data.position || "Unknown", // Fallback to "Unknown" if not provided
+              profilePicture:
+                result.data.profilePicture || "https://via.placeholder.com/150", // Default placeholder if no profile picture
+              bio: result.data.bio || "No bio available", // Default text if no bio
+            };
+            console.log("Fetched user from MongoDB:", currentUserWithDB);
+            setUser(currentUserWithDB);
+
+            // Store the user in localStorage
+            localStorage.setItem(
+              "currentUser",
+              JSON.stringify(currentUserWithDB)
+            );
+          } else {
+            console.warn(
+              "No user data found in MongoDB for:",
+              currentUser.email
+            );
+            setUser(null);
+          }
         } else {
           try {
             console.log("Fetching user from MongoDB:", currentUser.email);
@@ -35,9 +67,20 @@ export const AuthProvider = ({ children }) => {
             const result = await axios.get(`/api/users/${currentUser.email}`);
             if (result.data) {
               const currentUserWithDB = {
-                email: result.data.email,
-                role: result.data.role,
-                _id: result.data._id,
+                email: result.data.email || "N/A", // Default fallback if email is not provided
+                role: result.data.role || "Fan", // Default fallback if role is not provided
+                _id: result.data._id || "Unknown", // Default fallback if _id is not available
+                firstName: result.data.firstName || "Unknown", // Fallback to "Unknown" if not provided
+                lastName: result.data.lastName || "Unknown", // Fallback to "Unknown" if not provided
+                city: result.data.city || "Unknown", // Fallback to "Unknown" if not provided
+                state: result.data.state || "Unknown", // Fallback to "Unknown" if not provided
+                country: result.data.country || "Unknown", // Fallback to "Unknown" if not provided
+                zipcode: result.data.zipcode || "Unknown", // Fallback to "Unknown" if not provided
+                position: result.data.position || "Unknown", // Fallback to "Unknown" if not provided
+                profilePicture:
+                  result.data.profilePicture ||
+                  "https://via.placeholder.com/150", // Default placeholder if no profile picture
+                bio: result.data.bio || "No bio available", // Default text if no bio
               };
               console.log("Fetched user from MongoDB:", currentUserWithDB);
               setUser(currentUserWithDB);

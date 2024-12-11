@@ -11,27 +11,43 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
-import { Edit } from "@mui/icons-material";
 import { AuthContext } from "../../firebase/AuthContext"; // Import AuthContext
 import { useNavigate } from "react-router-dom";
-import PlayerCard from "../public/PlayerCard"; // Assuming PlayerCard is a custom component
+import axios from "axios";
+import Dashboard from "../public/Dashboard";
 
 const ProfilePage = () => {
   const { user, logout, getToken } = useContext(AuthContext); // Access user and logout function from context
   const navigate = useNavigate();
 
-  // Local state for role update
-  const [role, setRole] = useState(user?.role || "Fan"); // Default to 'Fan' if no role is set
+  // Local state for user profile details
+  const [firstName, setFirstName] = useState(user?.firstName || "");
+  const [lastName, setLastName] = useState(user?.lastName || "");
+  const [city, setCity] = useState(user?.city || "");
+  const [state, setState] = useState(user?.state || "");
+  const [country, setCountry] = useState(user?.country || "");
+  const [zipcode, setZipcode] = useState(user?.zipcode || "");
+  const [position, setPosition] = useState(user?.position || "");
+  const [role, setRole] = useState(user?.role || "Fan");
   const [error, setError] = useState(null);
+
+  // State for Modal visibility
+  const [openModal, setOpenModal] = useState(false);
 
   // Redirect to login if user is not authenticated
   useEffect(() => {
     if (!user) {
       navigate("/login"); // Redirect to login page if user is null
     }
-  }, [user, navigate]); // The useEffect runs when the 'user' state changes
+  }, [user, navigate]);
 
+  // Handle Logout
   const handleLogout = async () => {
     try {
       await logout(); // Call the logout function from context
@@ -41,13 +57,12 @@ const ProfilePage = () => {
     }
   };
 
+  // Handle Role Change
   const handleRoleChange = async (event) => {
     const selectedRole = event.target.value;
     setRole(selectedRole);
 
     try {
-      // Update user role in your backend or Firebase
-      // Assuming you have a backend API to update the role
       const token = await getToken();
       await fetch("/api/users/updaterole", {
         method: "POST",
@@ -60,7 +75,6 @@ const ProfilePage = () => {
           role: selectedRole,
         }),
       });
-      // Optionally update the user in localStorage
       localStorage.setItem(
         "currentUser",
         JSON.stringify({ ...user, role: selectedRole })
@@ -71,8 +85,49 @@ const ProfilePage = () => {
     }
   };
 
+  // Handle Profile Save
+  const handleProfileSave = async () => {
+    try {
+      const token = await getToken(); // Assuming getToken() returns a valid JWT token
+
+      // Make an Axios POST or PUT request to update the user profile
+      const response = await axios.put(
+        "/api/users/updateProfile", // Your API endpoint for updating profile
+        {
+          email: user.email,
+          firstName,
+          lastName,
+          city,
+          state,
+          country,
+          zipcode,
+          position,
+          role,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Pass the token in headers
+          },
+        }
+      );
+      console.log("response ", response.data);
+      // If the request is successful, display a success message
+      alert("Profile updated successfully!");
+      setOpenModal(false); // Close the modal after successful update
+    } catch (err) {
+      console.error("Error updating profile", err);
+      setError("Failed to update profile");
+    }
+  };
+
+  // Open Modal
+  const handleOpenModal = () => setOpenModal(true);
+
+  // Close Modal
+  const handleCloseModal = () => setOpenModal(false);
+
   if (!user) {
-    return null; // Optionally return null while redirecting, to avoid rendering the profile page
+    return null;
   }
 
   return (
@@ -101,43 +156,18 @@ const ProfilePage = () => {
             }}
           >
             <Typography variant="h4" sx={{ fontWeight: "bold", mb: 2 }}>
-              {user.email}
+              {user.firstName} {user.lastName}
             </Typography>
             <Typography variant="body1" color="textSecondary" sx={{ mb: 2 }}>
               {user.email}
             </Typography>
 
-            {/* Role Selection */}
-            <FormControl fullWidth sx={{ mb: 2 }}>
-              <InputLabel id="role-label">Role</InputLabel>
-              <Select
-                labelId="role-label"
-                id="role-select"
-                value={role}
-                onChange={handleRoleChange}
-                label="Role"
-              >
-                <MenuItem value="Player">Player</MenuItem>
-                <MenuItem value="Sponsor">Sponsor</MenuItem>
-                <MenuItem value="League">League</MenuItem>
-                <MenuItem value="Fan">Fan</MenuItem>
-              </Select>
-            </FormControl>
-
-            {error && (
-              <Typography variant="body2" color="error" sx={{ mb: 2 }}>
-                {error}
-              </Typography>
-            )}
-
-            {/* Edit Profile Button */}
+            {/* Open Edit Profile Modal */}
             <Button
-              fullWidth
-              variant="outlined"
+              variant="contained"
               color="primary"
-              startIcon={<Edit />}
-              sx={{ alignSelf: "flex-start", mt: 3 }}
-              onClick={() => console.log("Edit Profile clicked")}
+              fullWidth
+              onClick={handleOpenModal}
             >
               Edit Profile
             </Button>
@@ -148,13 +178,107 @@ const ProfilePage = () => {
               variant="outlined"
               color="primary"
               sx={{ alignSelf: "flex-start", mt: 3 }}
-              onClick={handleLogout} // Call logout function on click
+              onClick={handleLogout}
             >
               Logout
             </Button>
           </Paper>
         </Grid>
       </Grid>
+      <Dashboard />
+      {/* Modal to Edit Profile */}
+      <Dialog open={openModal} onClose={handleCloseModal}>
+        <DialogTitle>Edit Profile</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="First Name"
+            variant="outlined"
+            fullWidth
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Last Name"
+            variant="outlined"
+            fullWidth
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="City"
+            variant="outlined"
+            fullWidth
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="State"
+            variant="outlined"
+            fullWidth
+            value={state}
+            onChange={(e) => setState(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Country"
+            variant="outlined"
+            fullWidth
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Zip Code"
+            variant="outlined"
+            fullWidth
+            value={zipcode}
+            onChange={(e) => setZipcode(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Position to Play"
+            variant="outlined"
+            fullWidth
+            value={position}
+            onChange={(e) => setPosition(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+
+          {/* Role Selection */}
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel id="role-label">Role</InputLabel>
+            <Select
+              labelId="role-label"
+              id="role-select"
+              value={role}
+              onChange={handleRoleChange}
+              label="Role"
+            >
+              <MenuItem value="Player">Player</MenuItem>
+              <MenuItem value="Sponsor">Sponsor</MenuItem>
+              <MenuItem value="League">League</MenuItem>
+              <MenuItem value="Fan">Fan</MenuItem>
+            </Select>
+          </FormControl>
+
+          {error && (
+            <Typography variant="body2" color="error" sx={{ mb: 2 }}>
+              {error}
+            </Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseModal} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleProfileSave} color="primary">
+            Save Changes
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

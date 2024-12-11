@@ -10,6 +10,12 @@ const Signup = () => {
   const { user } = useContext(AuthContext); // Access the authenticated user
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [country, setCountry] = useState("");
+  const [zipcode, setZipcode] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -31,10 +37,16 @@ const Signup = () => {
       );
       const firebaseUser = userCredential.user;
 
-      // Send only necessary data to the backend (avoid sending password)
+      // Send necessary data to the backend (avoid sending password)
       const userData = {
         email: firebaseUser.email,
-        password: password,
+        firstName,
+        lastName,
+        city,
+        state,
+        country,
+        zipcode,
+        password, // The password is necessary for authentication but not stored in plain text
         role: "Fan", // Default role is 'fan'
       };
 
@@ -61,6 +73,20 @@ const Signup = () => {
       )}
       <TextField
         fullWidth
+        label="First Name"
+        value={firstName}
+        onChange={(e) => setFirstName(e.target.value)}
+        margin="normal"
+      />
+      <TextField
+        fullWidth
+        label="Last Name"
+        value={lastName}
+        onChange={(e) => setLastName(e.target.value)}
+        margin="normal"
+      />
+      <TextField
+        fullWidth
         label="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -72,6 +98,34 @@ const Signup = () => {
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        margin="normal"
+      />
+      <TextField
+        fullWidth
+        label="City"
+        value={city}
+        onChange={(e) => setCity(e.target.value)}
+        margin="normal"
+      />
+      <TextField
+        fullWidth
+        label="State"
+        value={state}
+        onChange={(e) => setState(e.target.value)}
+        margin="normal"
+      />
+      <TextField
+        fullWidth
+        label="Country"
+        value={country}
+        onChange={(e) => setCountry(e.target.value)}
+        margin="normal"
+      />
+      <TextField
+        fullWidth
+        label="Zip Code"
+        value={zipcode}
+        onChange={(e) => setZipcode(e.target.value)}
         margin="normal"
       />
       <Button

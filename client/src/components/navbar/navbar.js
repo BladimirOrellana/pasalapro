@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -6,14 +6,25 @@ import {
   Button,
   Box,
   IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
 } from "@mui/material";
 import { Menu } from "@mui/icons-material";
 import { Link } from "react-router-dom"; // For routing
 import { AuthContext } from "../firebase/AuthContext";
-import InstallBanner from "../InstallBanner/installBanner";
 
 const NavBar = () => {
   const { user } = useContext(AuthContext);
+  const [open, setOpen] = useState(false);
+
+  // Toggle Drawer
+  const toggleDrawer = (open) => {
+    setOpen(open);
+  };
+
   return (
     <AppBar
       position="sticky"
@@ -48,6 +59,7 @@ const NavBar = () => {
             color="black"
             aria-label="menu"
             sx={{ mr: 2 }}
+            onClick={() => toggleDrawer(true)} // Open drawer on click
           >
             <Menu />
           </IconButton>
@@ -62,7 +74,7 @@ const NavBar = () => {
             color="primary"
             sx={{ borderRadius: "20px" }}
           >
-            profile
+            Profile
           </Button>
         ) : (
           <Button
@@ -76,6 +88,56 @@ const NavBar = () => {
           </Button>
         )}
       </Toolbar>
+
+      {/* Mobile Drawer */}
+      <Drawer anchor="right" open={open} onClose={() => toggleDrawer(false)}>
+        <Box
+          sx={{ width: 250 }}
+          role="presentation"
+          onClick={() => toggleDrawer(false)} // Close drawer when clicked
+          onKeyDown={() => toggleDrawer(false)}
+        >
+          <List>
+            <ListItem button component={Link} to="/">
+              <ListItemText primary="Home" />
+            </ListItem>
+            <ListItem button component={Link} to="/features">
+              <ListItemText primary="Features" />
+            </ListItem>
+            <ListItem button component={Link} to="/about">
+              <ListItemText primary="About" />
+            </ListItem>
+            <ListItem button component={Link} to="/contact">
+              <ListItemText primary="Contact" />
+            </ListItem>
+          </List>
+          <Divider />
+          {/* Call-to-Action for mobile */}
+          {user ? (
+            <Button
+              component={Link}
+              to="/profile"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ borderRadius: "20px", marginTop: "10px" }}
+            >
+              Profile
+            </Button>
+          ) : (
+            <Button
+              component={Link}
+              to="/login"
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ borderRadius: "20px", marginTop: "10px" }}
+            >
+              Login
+            </Button>
+          )}
+        </Box>
+      </Drawer>
     </AppBar>
   );
 };
