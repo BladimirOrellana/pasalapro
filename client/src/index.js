@@ -3,16 +3,19 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration"; // Import service worker registration
-
+import { ThemeProvider } from "@mui/material/styles";
 import reportWebVitals from "./reportWebVitals";
 import { AuthProvider } from "./components/firebase/AuthContext";
+import sovrynTheme from "./assets/theme";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <AuthProvider>
-      <App />
-    </AuthProvider>
+    <ThemeProvider theme={sovrynTheme}>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );
 // Register the service worker

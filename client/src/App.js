@@ -11,6 +11,8 @@ import ProfilePage from "./components/views/private/profile";
 import NotFoundPage from "./components/views/public/nofound";
 import InstallBanner from "./components/InstallBanner/installBanner";
 import { register } from "./serviceWorkerRegistration"; // Make sure path is correct
+import BusinessProfilePage from "./components/views/private/BusinessProfile";
+import PublicBusinessPage from "./components/views/public/PublicBusinessPage";
 
 // Register service worker to enable push notifications
 register();
@@ -23,6 +25,11 @@ const App = () => {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route
+          path="/sponsors/sponsor/:userId"
+          element={<BusinessProfilePage />}
+        />
+        <Route path="/business-name" element={<PublicBusinessPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

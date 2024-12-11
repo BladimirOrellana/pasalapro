@@ -20,7 +20,7 @@ import {
 import { AuthContext } from "../../firebase/AuthContext"; // Import AuthContext
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import Dashboard from "../public/Dashboard";
+import Dashboard from "./Dashboard";
 
 const ProfilePage = () => {
   const { user, logout, getToken } = useContext(AuthContext); // Access user and logout function from context
@@ -35,6 +35,9 @@ const ProfilePage = () => {
   const [zipcode, setZipcode] = useState(user?.zipcode || "");
   const [position, setPosition] = useState(user?.position || "");
   const [role, setRole] = useState(user?.role || "Fan");
+  const [businessName, setBusinessName] = useState(""); // For Sponsor role
+  const [phone, setPhone] = useState(""); // For Sponsor role
+  const [typeOfBusiness, setTypeOfBusiness] = useState(""); // For Sponsor role
   const [error, setError] = useState(null);
 
   // State for Modal visibility
@@ -103,6 +106,9 @@ const ProfilePage = () => {
           zipcode,
           position,
           role,
+          businessName,
+          phone,
+          typeOfBusiness,
         },
         {
           headers: {
@@ -189,7 +195,23 @@ const ProfilePage = () => {
       {/* Modal to Edit Profile */}
       <Dialog open={openModal} onClose={handleCloseModal}>
         <DialogTitle>Edit Profile</DialogTitle>
-        <DialogContent>
+        <DialogContent style={{ padding: 10 }}>
+          {/* Role Selection */}
+          <FormControl fullWidth sx={{ mb: 2 }}>
+            <InputLabel id="role-label">Role</InputLabel>
+            <Select
+              labelId="role-label"
+              id="role-select"
+              value={role}
+              onChange={handleRoleChange}
+              label="Role"
+            >
+              <MenuItem value="Player">Player</MenuItem>
+              <MenuItem value="Sponsor">Sponsor</MenuItem>
+              <MenuItem value="League">League</MenuItem>
+              <MenuItem value="Fan">Fan</MenuItem>
+            </Select>
+          </FormControl>
           <TextField
             label="First Name"
             variant="outlined"
@@ -247,22 +269,35 @@ const ProfilePage = () => {
             sx={{ mb: 2 }}
           />
 
-          {/* Role Selection */}
-          <FormControl fullWidth sx={{ mb: 2 }}>
-            <InputLabel id="role-label">Role</InputLabel>
-            <Select
-              labelId="role-label"
-              id="role-select"
-              value={role}
-              onChange={handleRoleChange}
-              label="Role"
-            >
-              <MenuItem value="Player">Player</MenuItem>
-              <MenuItem value="Sponsor">Sponsor</MenuItem>
-              <MenuItem value="League">League</MenuItem>
-              <MenuItem value="Fan">Fan</MenuItem>
-            </Select>
-          </FormControl>
+          {/* Sponsor fields */}
+          {role === "Sponsor" && (
+            <>
+              <TextField
+                label="Business Name"
+                variant="outlined"
+                fullWidth
+                value={businessName}
+                onChange={(e) => setBusinessName(e.target.value)}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Phone"
+                variant="outlined"
+                fullWidth
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                sx={{ mb: 2 }}
+              />
+              <TextField
+                label="Type of Business"
+                variant="outlined"
+                fullWidth
+                value={typeOfBusiness}
+                onChange={(e) => setTypeOfBusiness(e.target.value)}
+                sx={{ mb: 2 }}
+              />
+            </>
+          )}
 
           {error && (
             <Typography variant="body2" color="error" sx={{ mb: 2 }}>
