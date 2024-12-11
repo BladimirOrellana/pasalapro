@@ -12,27 +12,9 @@ import {
   CardMedia,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { getToken, onMessageListener } from "../../firebase/firebase";
 import InstallBanner from "../../iosInstallBanner/iosInstallBanner";
 
 const HomePage = () => {
-  const [notification, setNotification] = useState({ title: "", body: "" });
-  const [isTokenFound, setTokenFound] = useState(false);
-  const [show, setShow] = useState(false);
-  getToken(setTokenFound);
-
-  onMessageListener()
-    .then((payload) => {
-      setShow(true);
-      setNotification({
-        title: payload.notification.title,
-        body: payload.notification.body,
-      });
-      console.log(payload);
-    })
-    .catch((err) => console.log("failed: ", err));
-
-  getToken(setTokenFound);
   return (
     <>
       {/* Hero Section */}
@@ -41,16 +23,18 @@ const HomePage = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          minHeight: "80vh",
+          minHeight: "90vh",
           textAlign: "center",
-          background: "linear-gradient(90deg, #1976d2, #42a5f5)",
+          background: "linear-gradient(120deg, #1976d2, #42a5f5)",
           color: "#fff",
         }}
       >
         <Container>
+          <Typography variant="h3" sx={{ mb: 4, fontWeight: "bold" }}>
+            Welcome to PasalaPro
+          </Typography>
           <Typography variant="h5" sx={{ mb: 4 }}>
-            PasalaPro helps soccer players monetize their talent, connect with
-            fans, and unlock opportunities to thrive in their game and career.
+            Your Gateway to Growth, Opportunities, and Fan Support in Soccer.
           </Typography>
           <Button
             component={Link}
@@ -58,25 +42,38 @@ const HomePage = () => {
             variant="contained"
             color="secondary"
             size="large"
+            sx={{
+              px: 5,
+              py: 2,
+              fontSize: "1.2rem",
+              textTransform: "uppercase",
+            }}
           >
-            Get Started
+            Get Started Now
           </Button>
         </Container>
       </Box>
 
       {/* About Section */}
-      <Container sx={{ my: 8 }}>
-        <Typography
-          variant="h4"
-          sx={{ fontWeight: "bold", textAlign: "center", mb: 4 }}
-        >
+      <Container sx={{ my: 8, textAlign: "center" }}>
+        <Typography variant="h4" sx={{ fontWeight: "bold", mb: 3 }}>
           What is PasalaPro?
         </Typography>
-        <Typography variant="h6" sx={{ textAlign: "center", mb: 4 }}>
-          PasalaPro is a platform built for soccer players to take control of
-          their careers by providing tools to monetize their skills, receive
-          support from fans, and collaborate with brands and teams. We empower
-          athletes to thrive on and off the field.
+        <Typography
+          variant="h6"
+          sx={{
+            lineHeight: 1.6,
+            color: "#555",
+            maxWidth: "800px",
+            margin: "auto",
+            mb: 6,
+          }}
+        >
+          PasalaPro is a cutting-edge platform designed for soccer players who
+          dream big. We empower athletes to take control of their careers by
+          providing tools to monetize their skills, connect with fans, and
+          attract sponsorships. Whether you’re looking to shine locally or
+          globally, PasalaPro helps you unlock your true potential.
         </Typography>
       </Container>
 
@@ -102,8 +99,8 @@ const HomePage = () => {
                   Monetize Your Talent
                 </Typography>
                 <Typography variant="body2">
-                  Earn through features like "Buy Me a Coffee," advertising, and
-                  exclusive content. Let your fans support you directly!
+                  Use tools like “Buy Me a Coffee” and ad opportunities to earn
+                  directly from your skills and fanbase.
                 </Typography>
               </CardContent>
             </Card>
@@ -114,16 +111,15 @@ const HomePage = () => {
                 component="img"
                 height="140"
                 image="https://source.unsplash.com/300x200/?support"
-                alt="Community"
+                alt="Support"
               />
               <CardContent>
                 <Typography variant="h6" gutterBottom>
-                  Build a Supportive Community
+                  Connect with Sponsors
                 </Typography>
                 <Typography variant="body2">
-                  Connect with your supporters and fans, build a loyal
-                  community, and receive direct encouragement to keep pushing
-                  your limits.
+                  Attract local and international sponsors looking for talented
+                  players to back. Your talent deserves recognition.
                 </Typography>
               </CardContent>
             </Card>
@@ -138,11 +134,11 @@ const HomePage = () => {
               />
               <CardContent>
                 <Typography variant="h6" gutterBottom>
-                  Collaborate and Network
+                  Build Your Community
                 </Typography>
                 <Typography variant="body2">
-                  Partner with teams, brands, and other players. Unlock new
-                  opportunities for collaboration and sponsorships.
+                  Engage with fans and teammates. Build a loyal community that
+                  supports your growth on and off the field.
                 </Typography>
               </CardContent>
             </Card>
@@ -156,18 +152,18 @@ const HomePage = () => {
           variant="h4"
           sx={{ fontWeight: "bold", textAlign: "center", mb: 4 }}
         >
-          Benefits of Using PasalaPro
+          Why Choose PasalaPro?
         </Typography>
         <Grid container spacing={4}>
           <Grid item xs={12} sm={6} md={4}>
             <Card elevation={3}>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
-                  Increased Visibility
+                  Discover Opportunities
                 </Typography>
                 <Typography variant="body2">
-                  Get noticed by brands, teams, and sponsors who are eager to
-                  support talented players like you.
+                  Gain exposure to brands, teams, and sponsors looking to invest
+                  in promising athletes.
                 </Typography>
               </CardContent>
             </Card>
@@ -176,12 +172,11 @@ const HomePage = () => {
             <Card elevation={3}>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
-                  Direct Fan Support
+                  Grow Your Network
                 </Typography>
                 <Typography variant="body2">
-                  Let your fans support you in meaningful ways. Whether it's
-                  through donations, merchandise, or exclusive content, the
-                  support is just a click away.
+                  Collaborate with other players, sponsors, and coaches to grow
+                  your career.
                 </Typography>
               </CardContent>
             </Card>
@@ -190,12 +185,11 @@ const HomePage = () => {
             <Card elevation={3}>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
-                  Opportunities for Growth
+                  Get Direct Fan Support
                 </Typography>
                 <Typography variant="body2">
-                  Take your career to the next level by connecting with key
-                  stakeholders, teams, and sponsors who align with your values
-                  and goals.
+                  Receive financial support, merchandise sales, and
+                  encouragement from your fans.
                 </Typography>
               </CardContent>
             </Card>
