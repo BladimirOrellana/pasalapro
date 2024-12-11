@@ -42,6 +42,14 @@ const HomePage = () => {
             PasalaPro helps soccer players monetize their talent, connect with
             fans, and unlock opportunities to thrive in their game and career.
           </Typography>
+          <Typography variant="h5" sx={{ mb: 4 }}>
+            PasalaPro helps soccer players monetize their talent, connect with
+            fans, and unlock opportunities to thrive in their game and career.
+          </Typography>
+          <Typography variant="h5" sx={{ mb: 4 }}>
+            PasalaPro helps soccer players monetize their talent, connect with
+            fans, and unlock opportunities to thrive in their game and career.
+          </Typography>
           <Button
             component={Link}
             to="/login"
