@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import { getToken } from "../../firebase/firebase";
+import InstallBanner from "../../iosInstallBanner/iosInstallBanner";
 
 const HomePage = () => {
   const [isTokenFound, setTokenFound] = useState(false);
@@ -214,6 +215,7 @@ const HomePage = () => {
         <Typography variant="body1" gutterBottom>
           &copy; {new Date().getFullYear()} PasalaPro. All Rights Reserved.
         </Typography>
+        <InstallBanner />
       </Box>
     </>
   );
