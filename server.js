@@ -7,9 +7,14 @@ const connectDB = require("./utils/db");
 dotenv.config(); // Load environment variables
 
 const app = express();
+// Allow requests from your app's frontend domain (replace with actual domain)
+const corsOptions = {
+  origin: "https://pasalapro-ac57c5a5d699.herokuapp.com", // Frontend domain
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
 
-// Enable CORS for all origins (for development)
-app.use(cors()); // This allows your frontend (React) to talk to this backend (Express)
+app.use(cors(corsOptions));
 
 app.use(express.json()); // Middleware to parse JSON
 app.use(express.urlencoded({ extended: true }));
