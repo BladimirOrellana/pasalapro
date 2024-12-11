@@ -12,11 +12,26 @@ import {
   CardMedia,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { getToken } from "../../firebase/firebase";
+import { getToken, onMessageListener } from "../../firebase/firebase";
 import InstallBanner from "../../iosInstallBanner/iosInstallBanner";
 
 const HomePage = () => {
+  const [notification, setNotification] = useState({ title: "", body: "" });
   const [isTokenFound, setTokenFound] = useState(false);
+  const [show, setShow] = useState(false);
+  getToken(setTokenFound);
+
+  onMessageListener()
+    .then((payload) => {
+      setShow(true);
+      setNotification({
+        title: payload.notification.title,
+        body: payload.notification.body,
+      });
+      console.log(payload);
+    })
+    .catch((err) => console.log("failed: ", err));
+
   getToken(setTokenFound);
   return (
     <>
@@ -33,20 +48,6 @@ const HomePage = () => {
         }}
       >
         <Container>
-          <Typography variant="h2" sx={{ fontWeight: "bold", mb: 2 }}>
-            {isTokenFound ? "Push Avilable" : "No push"}
-          </Typography>
-          <Typography variant="h2" sx={{ fontWeight: "bold", mb: 2 }}>
-            Empower Soccer Players with PasalaPro
-          </Typography>
-          <Typography variant="h5" sx={{ mb: 4 }}>
-            PasalaPro helps soccer players monetize their talent, connect with
-            fans, and unlock opportunities to thrive in their game and career.
-          </Typography>
-          <Typography variant="h5" sx={{ mb: 4 }}>
-            PasalaPro helps soccer players monetize their talent, connect with
-            fans, and unlock opportunities to thrive in their game and career.
-          </Typography>
           <Typography variant="h5" sx={{ mb: 4 }}>
             PasalaPro helps soccer players monetize their talent, connect with
             fans, and unlock opportunities to thrive in their game and career.

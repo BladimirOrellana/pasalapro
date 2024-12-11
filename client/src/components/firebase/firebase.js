@@ -50,6 +50,11 @@ export const getToken = async (setTokenFound) => {
     // Handle error while retrieving token
   }
 };
-
+export const onMessageListener = () =>
+  new Promise((resolve) => {
+    onMessage(messaging, (payload) => {
+      resolve(payload);
+    });
+  });
 // Exporting initialized services
 export { auth, analytics, messaging };

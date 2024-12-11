@@ -5,22 +5,29 @@ importScripts(
   "https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js"
 );
 
-// Retrieve Firebase configuration from the window object passed during registration
-var firebaseConfig = window.firebaseConfig;
+// Listen for messages from the main thread (the window)
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.firebaseConfig) {
+    const firebaseConfig = event.data.firebaseConfig;
 
-// Initialize the Firebase app in the service worker by passing the generated config
-firebase.initializeApp(firebaseConfig);
+    // Initialize Firebase with the config passed from the main thread
+    firebase.initializeApp(firebaseConfig);
 
-// Retrieve firebase messaging
-const messaging = firebase.messaging();
+    // Retrieve firebase messaging
+    const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage(function (payload) {
-  console.log("Received background message ", payload);
+    messaging.onBackgroundMessage(function (payload) {
+      console.log("Received background message ", payload);
 
-  const notificationTitle = payload.notification.title;
-  const notificationOptions = {
-    body: payload.notification.body,
-  };
+      const notificationTitle = payload.notification.title;
+      const notificationOptions = {
+        body: payload.notification.body,
+      };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+      self.registration.showNotification(
+        notificationTitle,
+        notificationOptions
+      );
+    });
+  }
 });
